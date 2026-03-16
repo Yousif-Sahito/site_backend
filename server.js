@@ -6,6 +6,11 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import projectRoutes from "./routes/projectRoutes.js";
 import { seedAdmin } from "./controllers/authController.js";
+import fs from "fs";
+
+if (!fs.existsSync("./uploads")) {
+  fs.mkdirSync("./uploads");
+}
 
 dotenv.config();
 
