@@ -6,11 +6,6 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import projectRoutes from "./routes/projectRoutes.js";
 import { seedAdmin } from "./controllers/authController.js";
-import fs from "fs";
-
-if (!fs.existsSync("./uploads")) {
-  fs.mkdirSync("./uploads");
-}
 
 dotenv.config();
 
@@ -19,7 +14,30 @@ const app = express();
 connectDB();
 seedAdmin();
 
-app.use(cors());
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:3000",
+  "https://projectscabinet.vercel.app",
+];
+
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("Not allowed by CORS"));
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
+app.options(/.*/, cors());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
