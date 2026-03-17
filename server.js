@@ -22,10 +22,14 @@ const allowedOrigins = [
 
 app.use(
   cors({
-    origin(origin, callback) {
+    origin: function (origin, callback) {
       if (!origin) return callback(null, true);
 
-      if (allowedOrigins.includes(origin)) {
+      const isAllowed =
+        allowedOrigins.includes(origin) ||
+        origin.endsWith(".vercel.app");
+
+      if (isAllowed) {
         return callback(null, true);
       }
 
@@ -35,8 +39,6 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-
-app.options(/.*/, cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
