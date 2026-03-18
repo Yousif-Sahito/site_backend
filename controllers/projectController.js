@@ -5,11 +5,11 @@ export const createProject = async (req, res) => {
     const { name, title, details, description, liveDemoUrl } = req.body;
 
     const thumbnail = req.files?.thumbnail?.[0]
-      ? `/uploads/thumbnails/${req.files.thumbnail[0].filename}`
+      ? req.files.thumbnail[0].path
       : "";
 
     const pictures = req.files?.pictures
-      ? req.files.pictures.map((file) => `/uploads/pictures/${file.filename}`)
+      ? req.files.pictures.map((file) => file.path)
       : [];
 
     if (!name || !title || !details || !description || !liveDemoUrl || !thumbnail) {
